@@ -1,2 +1,2 @@
-# meshblu-connector-base
-Meshblu Connectors Base
+# meshblu-connector-cli
+Meshblu Connectors CLI
