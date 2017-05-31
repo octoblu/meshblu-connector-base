@@ -3,10 +3,6 @@ const path = require("path")
 const MeshbluConnectorRunner = require("meshblu-connector-runner/runner")
 const MeshbluHttp = require("meshblu-http")
 
-const IS_WINDOWS = process.platform == "win32"
-var EventLogger
-if (IS_WINDOWS) EventLogger = require("node-windows").EventLogger
-
 const CLI_OPTIONS = [
   {
     name: "version",
@@ -87,19 +83,13 @@ class MeshbluConnectorCommand {
     const { uuid, token, domain } = options
     const meshbluConfig = { uuid, token, domain, resolveSrv: true }
     const connectorPath = this.connectorPath
-    var logger
-
-    if (IS_WINDOWS) {
-      logger = new EventLogger(`${this.connectorPackageJSON.name}-${this.connectorPackageJSON.version}-${uuid}`)
-    } else {
-      logger = {
-        trace: console.info,
-        debug: console.info,
-        info: console.log,
-        warning: console.log,
-        error: console.error,
-        fatal: console.error,
-      }
+    const logger = {
+      trace: console.info,
+      debug: console.info,
+      info: console.log,
+      warning: console.log,
+      error: console.error,
+      fatal: console.error,
     }
     this.verifyMeshbluDevice({ meshbluConfig }, (error, device) => {
       if (error) return this.die(error)
