@@ -61,15 +61,26 @@ class MeshbluConnectorCommand {
     } catch (e) {
       return {}
     }
+    if (opts.help) {
+      console.log(`usage: meshblu-connector [OPTIONS]\noptions:\n${parser.help({ includeEnv: true })}`)
+      process.exit(0)
+    }
+
+    if (opts.version) {
+      const packageJSON = require(path.join(process.cwd(), "package.json"))
+      console.log(packageJSON.version)
+      process.exit(0)
+    }
+
     return opts
   }
 
   run() {
-    const opts = this.parseArgv({ options: this.cliOptions, argv: this.argv })
-    const { uuid, token } = opts
+    const options = this.parseArgv({ options: this.cliOptions, argv: this.argv })
+    const { uuid, token } = options
     if (!uuid) return this.die(new Error("MeshbluConnectorCommand requires --uuid or MESHBLU_UUID"))
     if (!token) return this.die(new Error("MeshbluConnectorCommand requires --token or MESHBLU_TOKEN"))
-    this.startConnectorRunner({ options: opts })
+    this.startConnectorRunner({ options })
   }
 
   startConnectorRunner({ options }) {
