@@ -52,6 +52,7 @@ class MeshbluConnectorCommand {
     this.argv = argv
     this.connectorPath = connectorPath
     this.cliOptions = cliOptions
+    this.connectorPackageJSON = require(path.join(this.connectorPath, "package.json"))
   }
 
   parseArgv({ argv, options }) {
@@ -67,8 +68,7 @@ class MeshbluConnectorCommand {
     }
 
     if (opts.version) {
-      const packageJSON = require(path.join(process.cwd(), "package.json"))
-      console.log(packageJSON.version)
+      console.log(this.connectorPackageJSON.version)
       process.exit(0)
     }
 
@@ -90,7 +90,7 @@ class MeshbluConnectorCommand {
     var logger
 
     if (IS_WINDOWS) {
-      logger = new EventLogger("connector")
+      logger = new EventLogger(`${this.connectorPackageJSON.name}-${this.connectorPackageJSON.version}-${uuid}`)
     } else {
       logger = {
         trace: console.info,
