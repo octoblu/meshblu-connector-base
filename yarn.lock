@@ -873,7 +873,7 @@ meshblu-encryption@^2.0.1:
     lodash "^4.6.1"
     node-rsa "^0.3.2"
 
-meshblu-http@^9.8.0:
+meshblu-http@^9.8.0, meshblu-http@^9.9.0:
   version "9.9.0"
   resolved "https://registry.yarnpkg.com/meshblu-http/-/meshblu-http-9.9.0.tgz#32e28f96a1908b4f5e644792a9865a916b62de60"
   dependencies:
