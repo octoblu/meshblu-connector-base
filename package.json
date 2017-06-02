@@ -1,6 +1,6 @@
 {
   "name": "meshblu-connector-cli",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Meshblu Connector CLI",
   "main": "index.js",
   "scripts": {
@@ -31,12 +31,12 @@
   },
   "homepage": "https://github.com/octoblu/meshblu-connector-cli#readme",
   "dependencies": {
-    "meshblu-connector-runner": "^10.8.5",
-    "meshblu-http": "^9.9.0"
+    "meshblu-connector-runner": "^11.0.2",
+    "meshblu-http": "^10.0.4"
   },
   "devDependencies": {
     "husky": "^0.13.4",
-    "lint-staged": "^3.5.1",
-    "prettier": "^1.3.1"
+    "lint-staged": "^3.6.0",
+    "prettier": "^1.4.0"
   }
 }

@@ -87,7 +87,7 @@ class MeshbluConnectorCommand {
       trace: console.info,
       debug: console.info,
       info: console.log,
-      warning: console.log,
+      warn: console.log,
       error: console.error,
       fatal: console.error,
     }
