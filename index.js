@@ -1,6 +1,6 @@
 const dashdash = require("dashdash")
 const path = require("path")
-const MeshbluConnectorRunner = require("meshblu-connector-runner/runner")
+const MeshbluConnectorRunner = require("meshblu-connector-runner/dist/runner.js")
 const MeshbluHttp = require("meshblu-http")
 
 const CLI_OPTIONS = [
