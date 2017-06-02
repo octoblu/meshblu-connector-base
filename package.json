@@ -1,6 +1,6 @@
 {
   "name": "meshblu-connector-cli",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Meshblu Connector CLI",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/octoblu/meshblu-connector-cli#readme",
   "dependencies": {
-    "meshblu-connector-runner": "^11.0.3",
+    "meshblu-connector-runner": "^11.0.4",
     "meshblu-http": "^10.0.4"
   },
   "devDependencies": {

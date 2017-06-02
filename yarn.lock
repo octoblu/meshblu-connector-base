@@ -742,9 +742,9 @@ meshblu-config@^8.0.1:
     lodash "^4.17.4"
     meshblu-encryption "^3.0.1"
 
-meshblu-connector-runner@^11.0.3:
-  version "11.0.3"
-  resolved "https://registry.yarnpkg.com/meshblu-connector-runner/-/meshblu-connector-runner-11.0.3.tgz#d7a35ce0eae4545683571c25d351227903c3a165"
+meshblu-connector-runner@^11.0.4:
+  version "11.0.4"
+  resolved "https://registry.yarnpkg.com/meshblu-connector-runner/-/meshblu-connector-runner-11.0.4.tgz#c3e2fea451d984925c8791968437fa7723f494e6"
   dependencies:
     async "^2.4.1"
     dashdash "^1.14.1"
@@ -757,6 +757,7 @@ meshblu-connector-runner@^11.0.3:
     meshblu-config "^8.0.1"
     meshblu-http "^10.0.4"
     moment "^2.18.1"
+    path-exists "^3.0.0"
   optionalDependencies:
     bunyan "^1.8.10"
 
@@ -968,6 +969,10 @@ parseuri@0.0.5:
   resolved "https://registry.yarnpkg.com/parseuri/-/parseuri-0.0.5.tgz#80204a50d4dbb779bfdc6ebe2778d90e4bce320a"
   dependencies:
     better-assert "~1.0.0"
+
+path-exists@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/path-exists/-/path-exists-3.0.0.tgz#ce0ebeaa5f78cb18925ea7d810d7b59b010fd515"
 
 path-is-absolute@^1.0.0:
   version "1.0.1"
