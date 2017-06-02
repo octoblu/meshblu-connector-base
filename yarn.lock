@@ -742,9 +742,9 @@ meshblu-config@^8.0.1:
     lodash "^4.17.4"
     meshblu-encryption "^3.0.1"
 
-meshblu-connector-runner@^11.0.2:
-  version "11.0.2"
-  resolved "https://registry.yarnpkg.com/meshblu-connector-runner/-/meshblu-connector-runner-11.0.2.tgz#64b648a10babec7e8c725201ec11994dace9761d"
+meshblu-connector-runner@^11.0.3:
+  version "11.0.3"
+  resolved "https://registry.yarnpkg.com/meshblu-connector-runner/-/meshblu-connector-runner-11.0.3.tgz#d7a35ce0eae4545683571c25d351227903c3a165"
   dependencies:
     async "^2.4.1"
     dashdash "^1.14.1"
