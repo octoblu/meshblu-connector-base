@@ -43,7 +43,7 @@ const CLI_OPTIONS = [
   {
     names: ["env-file"],
     type: "string",
-    default: ".env",
+    default: path.join(process.cwd(), ".env"),
     env: "MESHBLU_ENV_FILE",
     help: "dotenv file",
     helpArg: "FILE",

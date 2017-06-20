@@ -1,6 +1,6 @@
 {
   "name": "meshblu-connector-cli",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Meshblu Connector CLI",
   "main": "index.js",
   "scripts": {
