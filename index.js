@@ -72,7 +72,7 @@ class MeshbluConnectorCommand {
     return
   }
 
-  parseArgv({ argv, options }) {
+  parseArgv({ argv }) {
     try {
       var opts = this.parser.parse(argv)
     } catch (e) {
