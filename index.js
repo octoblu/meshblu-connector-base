@@ -2,6 +2,10 @@ const dashdash = require("dashdash")
 const path = require("path")
 const MeshbluConnectorRunner = require("meshblu-connector-runner/dist/runner.js")
 const MeshbluHttp = require("meshblu-http")
+const dotenv = require("dotenv")
+const dotenvExpand = require("dotenv-expand")
+const fs = require("fs")
+const chalk = require("chalk")
 
 const CLI_OPTIONS = [
   {
@@ -36,6 +40,14 @@ const CLI_OPTIONS = [
     help: "Meshblu SRV Domain",
     helpArg: "DOMAIN",
   },
+  {
+    names: ["env-file"],
+    type: "string",
+    default: ".env",
+    env: "MESHBLU_ENV_FILE",
+    help: "dotenv file",
+    helpArg: "FILE",
+  },
 ]
 
 class MeshbluConnectorCommand {
@@ -49,17 +61,25 @@ class MeshbluConnectorCommand {
     this.connectorPath = connectorPath
     this.cliOptions = cliOptions
     this.connectorPackageJSON = require(path.join(this.connectorPath, "package.json"))
+    this.parser = dashdash.createParser({ options: this.cliOptions })
+  }
+
+  parseDotEnv({ envFile }) {
+    process.env.MESHBLU_CONNECTOR_CWD = process.cwd()
+    if (!fs.existsSync(envFile)) return
+    const parsedEnv = dotenv.config({ path: envFile })
+    dotenvExpand(parsedEnv)
+    return
   }
 
   parseArgv({ argv, options }) {
-    var parser = dashdash.createParser({ options })
     try {
-      var opts = parser.parse(argv)
+      var opts = this.parser.parse(argv)
     } catch (e) {
       return {}
     }
     if (opts.help) {
-      console.log(`usage: meshblu-connector [OPTIONS]\noptions:\n${parser.help({ includeEnv: true })}`)
+      console.log(`usage: meshblu-connector [OPTIONS]\noptions:\n${this.parser.help({ includeEnv: true, includeDefault: true })}`)
       process.exit(0)
     }
 
@@ -73,9 +93,20 @@ class MeshbluConnectorCommand {
 
   run() {
     const options = this.parseArgv({ options: this.cliOptions, argv: this.argv })
-    const { uuid, token } = options
-    if (!uuid) return this.die(new Error("MeshbluConnectorCommand requires --uuid or MESHBLU_UUID"))
-    if (!token) return this.die(new Error("MeshbluConnectorCommand requires --token or MESHBLU_TOKEN"))
+    const { uuid, token, env_file } = options
+    let errors = []
+    this.parseDotEnv({ envFile: env_file })
+
+    if (!uuid) errors.push(new Error("MeshbluConnectorCLI requires --uuid or MESHBLU_UUID"))
+    if (!token) errors.push(new Error("MeshbluConnectorCLI requires --token or MESHBLU_TOKEN"))
+    if (errors.length) {
+      console.log(`usage: meshblu-connector-cli [OPTIONS]\noptions:\n${this.parser.help({ includeEnv: true, includeDefault: true })}`)
+      errors.forEach(error => {
+        console.error(chalk.red(error.message))
+      })
+      process.exit(1)
+    }
+
     this.startConnectorRunner({ options })
   }
 
@@ -91,7 +122,7 @@ class MeshbluConnectorCommand {
       error: console.error,
       fatal: console.error,
     }
-    this.verifyMeshbluDevice({ meshbluConfig }, (error, device) => {
+    this.verifyMeshbluDevice({ meshbluConfig }, error => {
       if (error) return this.die(error)
       this.runner = new MeshbluConnectorRunner({ meshbluConfig, connectorPath, logger })
       this.runner.run()
