@@ -1,27 +1,14 @@
-const dashdash = require("dashdash")
+const OctoDash = require("octodash")
 const path = require("path")
 const MeshbluConnectorRunner = require("meshblu-connector-runner/dist/runner.js")
 const MeshbluHttp = require("meshblu-http")
-const dotenv = require("dotenv")
-const dotenvExpand = require("dotenv-expand")
-const fs = require("fs")
-const chalk = require("chalk")
 
 const CLI_OPTIONS = [
-  {
-    name: "version",
-    type: "bool",
-    help: "Print connector version and exit.",
-  },
-  {
-    names: ["help", "h"],
-    type: "bool",
-    help: "Print this help and exit.",
-  },
   {
     names: ["uuid", "u"],
     type: "string",
     env: "MESHBLU_UUID",
+    required: true,
     help: "Meshblu UUID",
     helpArg: "UUID",
   },
@@ -29,6 +16,7 @@ const CLI_OPTIONS = [
     names: ["token", "t"],
     type: "string",
     env: "MESHBLU_TOKEN",
+    required: true,
     help: "Meshblu Token",
     helpArg: "TOKEN",
   },
@@ -47,66 +35,29 @@ const CLI_OPTIONS = [
     env: "MESHBLU_ENV_FILE",
     help: "dotenv file",
     helpArg: "FILE",
+    completionType: "file",
   },
 ]
 
 class MeshbluConnectorCommand {
   constructor(options) {
     if (!options) options = {}
-    var { argv, cliOptions, connectorPath } = options
+    let { connectorPath, cliOptions, argv } = options
     if (!cliOptions) cliOptions = CLI_OPTIONS
     if (!connectorPath) connectorPath = process.cwd()
-    if (!argv) return this.die(new Error("MeshbluConnectorCommand requires options.argv"))
-    this.argv = argv
     this.connectorPath = connectorPath
-    this.cliOptions = cliOptions
     this.connectorPackageJSON = require(path.join(this.connectorPath, "package.json"))
-    this.parser = dashdash.createParser({ options: this.cliOptions })
-  }
-
-  parseDotEnv({ envFile }) {
     process.env.MESHBLU_CONNECTOR_CWD = process.cwd()
-    if (!fs.existsSync(envFile)) return
-    const parsedEnv = dotenv.config({ path: envFile })
-    dotenvExpand(parsedEnv)
-    return
-  }
-
-  parseArgv({ argv }) {
-    try {
-      var opts = this.parser.parse(argv)
-    } catch (e) {
-      return {}
-    }
-    if (opts.help) {
-      console.log(`usage: meshblu-connector [OPTIONS]\noptions:\n${this.parser.help({ includeEnv: true, includeDefault: true })}`)
-      process.exit(0)
-    }
-
-    if (opts.version) {
-      console.log(this.connectorPackageJSON.version)
-      process.exit(0)
-    }
-
-    return opts
+    this.octoDash = new OctoDash({
+      argv,
+      cliOptions,
+      name: this.connectorPackageJSON.name,
+      version: this.connectorPackageJSON.version,
+    })
   }
 
   run() {
-    const options = this.parseArgv({ options: this.cliOptions, argv: this.argv })
-    const { uuid, token, env_file } = options
-    let errors = []
-    this.parseDotEnv({ envFile: env_file })
-
-    if (!uuid) errors.push(new Error("MeshbluConnectorCLI requires --uuid or MESHBLU_UUID"))
-    if (!token) errors.push(new Error("MeshbluConnectorCLI requires --token or MESHBLU_TOKEN"))
-    if (errors.length) {
-      console.log(`usage: meshblu-connector-cli [OPTIONS]\noptions:\n${this.parser.help({ includeEnv: true, includeDefault: true })}`)
-      errors.forEach(error => {
-        console.error(chalk.red(error.message))
-      })
-      process.exit(1)
-    }
-
+    const options = this.octoDash.parseOptions()
     this.startConnectorRunner({ options })
   }
 
@@ -123,7 +74,7 @@ class MeshbluConnectorCommand {
       fatal: console.error,
     }
     this.verifyMeshbluDevice({ meshbluConfig }, error => {
-      if (error) return this.die(error)
+      if (error) return this.octoDash.die(error)
       this.runner = new MeshbluConnectorRunner({ meshbluConfig, connectorPath, logger })
       this.runner.run()
     })
@@ -132,11 +83,6 @@ class MeshbluConnectorCommand {
   verifyMeshbluDevice({ meshbluConfig }, callback) {
     const meshbluHttp = new MeshbluHttp(meshbluConfig)
     meshbluHttp.whoami(callback)
-  }
-
-  die(error) {
-    console.error("Meshblu Connector Command: error: %s", error.message)
-    process.exit(1)
   }
 }
 
