@@ -1,6 +1,6 @@
 const OctoDash = require("octodash")
 const path = require("path")
-const MeshbluConnectorRunner = require("meshblu-connector-runner/dist/runner.js")
+const MeshbluConnectorRunner = require("meshblu-connector-runner")
 const MeshbluHttp = require("meshblu-http")
 
 const CLI_OPTIONS = [
@@ -65,17 +65,9 @@ class MeshbluConnectorCommand {
     const { uuid, token, domain } = options
     const meshbluConfig = { uuid, token, domain, resolveSrv: true }
     const connectorPath = this.connectorPath
-    const logger = {
-      trace: console.info,
-      debug: console.info,
-      info: console.log,
-      warn: console.log,
-      error: console.error,
-      fatal: console.error,
-    }
     this.verifyMeshbluDevice({ meshbluConfig }, error => {
       if (error) return this.octoDash.die(error)
-      this.runner = new MeshbluConnectorRunner({ meshbluConfig, connectorPath, logger })
+      this.runner = new MeshbluConnectorRunner({ meshbluConfig, connectorPath, logType: "console" })
       this.runner.run()
     })
   }
